@@ -1,5 +1,4 @@
 import { ethers } from 'ethers';
-import styled from 'styled-components'
 import { Route, Routes, BrowserRouter } from 'react-router-dom'
 import { contractAddress, contractABI } from './constants'
 import { useState, useEffect } from 'react';
@@ -12,7 +11,7 @@ import "./App.css"
 import Footer from './components/Footer';
 
 const App = () => {
-  const [contarctIns, setContractIns] = useState(null);
+  const [contractIns, setContractIns] = useState(null);
   const [account, setAccount] = useState(null);
 
   useEffect(() => {
@@ -24,20 +23,20 @@ const App = () => {
           return;
         }
         const account = await ethereum.request({ method: "eth_requestAccounts" });
-        window.ethereum.on("accountsChanged", () =>history.go());
+        window.ethereum.on("accountsChanged", () =>{history.go()});
         setAccount(account);
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
 
         const contract = new ethers.Contract(contractAddress, contractABI, signer);
         setContractIns(contract);
       }
       catch (e) {
-        console.error(e);
+        // console.error(e);
       }
     }
     blockchainData();
-  }, [account])
+  }, [])
 
   return (
     <>
@@ -45,9 +44,9 @@ const App = () => {
         <Nav account={account}/>
         <Routes>
           <Route path="/" element={<Home account={account}/>} />
-          <Route path="/create" element={<CreateElection contract={contarctIns} account={account}/>} />
-          <Route path="/result" element={<Result contract={contarctIns} account={account}/>} />
-          <Route path="/vote" element={<Vote contract={contarctIns} account={account}/>} />
+          <Route path="/create" element={<CreateElection contract={contractIns} account={account}/>} />
+          <Route path="/result" element={<Result contract={contractIns} account={account}/>} />
+          <Route path="/vote" element={<Vote contract={contractIns} account={account}/>} />
         </Routes>
         <Footer />
       </BrowserRouter>

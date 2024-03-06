@@ -19,7 +19,7 @@ const Vote = ({ contract, account }) => {
   const handleElectionChange = (event) => {
     setVal(event.target.value);
     console.log(event.target.value);
-    // setSelectedElection(true);
+    setSelectedElection(true);
   }
 
   const handleCandidateChange = (event) => {
@@ -78,16 +78,15 @@ const Vote = ({ contract, account }) => {
 
   const getCandidates = async () => {
     setElectionName(val);
-    // console.log(val);
     event.preventDefault();
     try {
-      let getCandidatesRes = await contract.allCandidates(electionName);
-      // getCandidatesRes = await getCandidatesRes;
+      let getCandidatesRes = await contract.allCandidates(val);
+      getCandidatesRes = await getCandidatesRes;
       if (!getCandidatesRes) {
         console.error("getCandidates error");
       }
       setCandidates(getCandidatesRes);
-      // console.log(getCandidatesRes);
+      console.log(getCandidatesRes);
       setSelectedElection(true);
       // setElectionName('');
     }

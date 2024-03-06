@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\home\\Documents\\DAPP\\contracts\\Voting.sol": {
-      "lastModificationDate": 1709533754472,
-      "contentHash": "058226f194db89cbf04a64fba914a7bb",
+      "lastModificationDate": 1709719597640,
+      "contentHash": "53e63228fbbfb1a9f5ecd07ce1b9eb54",
       "sourceName": "contracts/Voting.sol",
       "solcConfig": {
         "version": "0.8.19",

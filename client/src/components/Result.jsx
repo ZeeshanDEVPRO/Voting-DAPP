@@ -72,7 +72,7 @@ const Result = ({ contract, account }) => {
         </form>
       ) : (
         <div className="final">
-          <div id="tit">Your Election Name: {electionName}</div>
+          <div id="tit">Election Name: {electionName}</div>
           {blockchainResult.length > 0 ? (
             <div className="results">
               <table>
