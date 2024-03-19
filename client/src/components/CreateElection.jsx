@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { ToastContainer, toast,Bounce} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateElection = ({ contract, account }) => {
 
@@ -22,15 +24,29 @@ const CreateElection = ({ contract, account }) => {
 
   useEffect(() => {
     getElections();
-
   }, [contract])
 
   const addVoterr = async () => {
     setElectionName(val);
     event.preventDefault();
     try {
-
       setVoterLoading(true);
+      if(electionName==="" || voterAddress==="" ) {
+        console.log(electionName, voterAddress)
+        toast.error('Please enter all fields!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+        setVoterLoading(false);
+        return;
+      }
       const addRes = await contract.addVoter(electionName, account[0], voterAddress);
 
       if (!addRes) {
@@ -43,45 +59,111 @@ const CreateElection = ({ contract, account }) => {
         setElectionName('');
         setVoterAddress('');
         setVoterLoading(false);
-        setMsgVoter("Voter Added");
-        setTimeout(() => {
-          setMsgVoter('');
-        }, 5000);
+        toast.success('Voter added successfully!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        })
+      
       }
     }
-
     catch (e) {
       setVoterLoading(false);
       console.error(e);
+      toast.error('Error adding voter!', {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      })
     }
   }
 
   const add = async () => {
+    event.preventDefault();
     setElectionName(val);
-    // event.preventDefault();
     try {
       setCandidateLoading(true);
+      if(electionName==="" || candidateName==="" || !account) {
+        toast.error('Please enter all fields!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+          hideProgressBar: true,
+        });
+        setCandidateLoading(false);
+        return
+      }
       const addRes = await contract.addCandidate(electionName, candidateName, account[0]);
       if (!addRes) {
         setError('Error adding candidate!');
         setElectionName('');
         setCandidateLoading(false);
+        toast.error('Error adding candidate!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+          hideProgressBar: true,
+        })
       }
       else {
         console.warn("added candidate", candidateName);
+        toast.success('Candidate Added', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+          hideProgressBar: true,
+        })
         setElectionName('');
         setCandidateName('');
         setCandidateLoading(false);
-        setMsgCandidate("Candidate Added");
-        setTimeout(() => {
-          setMsgCandidate('');
-        }, 5000);
       }
 
     }
     catch (e) {
       // add();
       setCandidateLoading(false);
+      toast.error('Error adding candidate!', {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+        hideProgressBar: true,
+      })
       console.error(e);
     }
   }
@@ -91,6 +173,22 @@ const CreateElection = ({ contract, account }) => {
     setElectionName(val);
     try {
       setCancelLoading(true);
+      if(electionName==="" || !account) {
+        toast.error('Please enter all fields!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+          hideProgressBar: true,
+        });
+        setCancelLoading(false);
+        return
+      }
       const cancelRes = await contract.cancelElection(electionName, account[0]);
 
       if (cancelRes) {
@@ -98,10 +196,6 @@ const CreateElection = ({ contract, account }) => {
         setElectionName('');
         getElections();
         setCancelLoading(false);
-        setMsgCancel("Election Cancelled");
-        setTimeout(() => {
-          setMsgCancel('');
-        }, 5000);
         window.location.reload();
       }
       else {
@@ -112,6 +206,18 @@ const CreateElection = ({ contract, account }) => {
     catch (e) {
       console.error(e);
       setCancelLoading(false);
+      toast.error('Error cancelling election!', {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+        hideProgressBar: true,
+      })
     }
   }
 
@@ -122,7 +228,6 @@ const CreateElection = ({ contract, account }) => {
         console.error("getElection error");
       }
       setElections(getElection);
-      // console.log(getElection);
     }
     catch (e) {
       console.error(e);
@@ -133,18 +238,46 @@ const CreateElection = ({ contract, account }) => {
   const handleElectionChange = (event) => {
     setVal(event.target.value);
     console.log(event.target.value);
-    // setSelectedElection(true);
   }
 
   const create = async () => {
     event.preventDefault();
     try {
-
+      setLoading(true);
       const start = (new Date(startTime).getTime()) / 1000;
       const end = (new Date(endTime).getTime()) / 1000;
+      if(!electionName || !start || !end) {
+        toast.error('Please enter all fields!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+          });
+        setLoading(false);
+        return
+      }
       console.log(start, end, electionName);
-      setLoading(true);
-
+      if(start>end || start===end || Date.now()>=start*1000 || Date.now()>=end*1000 ) {
+        console.warn(Date.now(),start,end)
+        toast.error('start time must be before end time, and must be in future!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+          });
+        setLoading(false);
+        return
+      }
       const createRes = await contract.createElection(electionName, start, end, account[0]);
       if (createRes) {
         console.log("created your election");
@@ -152,19 +285,28 @@ const CreateElection = ({ contract, account }) => {
         setStartTime('');
         setEndTime('');
         setLoading(false);
-        setMessage("Election Created");
-        setTimeout(() => {
-          setMessage('');
-        }, 5000);
+        
+        toast.success('Election created!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+          });
+       
       } else {
-        setError('Error creating election!');
+        console.error("create error");
+        setLoading(false);
       }
       getElections();
     } catch (error) {
+      // create();
+      setLoading(false);
       console.error(error);
-      create();
-
-      setError('An error occurred!');
     }
   };
 
@@ -175,19 +317,17 @@ const CreateElection = ({ contract, account }) => {
       <div className="tit">Create Election </div>
       <div className="message">{message}</div>
       <form>
-        {/* Add label for electionName */}
+
         <label htmlFor="electionName">Election Name:</label>
         <input type="text" id="electionName" onFocus={() => setMessage('')} required placeholder="Election Name" value={electionName} onChange={(e) => setElectionName(e.target.value)} />
 
-        {/* Add label and input for startTime */}
         <label htmlFor="startTime">Start Time:</label>
         <input type="datetime-local" onFocus={() => setMessage('')} id="startTime" required placeholder="Start Time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
 
-        {/* Add label for endTime */}
         <label htmlFor="endTime">End Time:</label>
         <input type="datetime-local" onFocus={() => setMessage('')} id="endTime" required placeholder="End Time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
 
-        {error && <div className="error">{error}</div>} {/* Display error message */}
+        {error && <div className="error">{error}</div>}
         {loading === false ? (
           <button onClick={create}>Create Election</button>
         ) : (
@@ -195,11 +335,10 @@ const CreateElection = ({ contract, account }) => {
         )}
 
       </form>
-      {/* ///////////////////////////////////////////////////////////////////////////////////////////////// */}
+
       <div className="tit">Add Candidate</div>
       <div className="message">{msgCandidate}</div>
       <form className='candidate-form'>
-        {/* Add label for electionName  */}
 
         <fieldset style={{ border: '1px solid rgb(229, 229, 233)', borderRadius: '10px' }}>
           <legend>Choose an election : </legend>
@@ -225,7 +364,7 @@ const CreateElection = ({ contract, account }) => {
           )}
 
         </fieldset>
-        {/* Add label for candidateName */}
+
         <label htmlFor="candidateName">Candidate Name :</label>
         <input onFocus={() => setMsgCandidate('')} type="text" id="candidateName" placeholder="Candidate Name" value={candidateName} onChange={(e) => setCandidateName(e.target.value)} />
 
@@ -239,14 +378,10 @@ const CreateElection = ({ contract, account }) => {
 
       </form>
 
-
-
-      {/* ///////////////////////////////////////////////////////////////////////////////////////////////// */}
-
       <div className="tit">Add Voter</div>
       <div className="message">{msgVoter}</div>
       <form id='voter-form'>
-        {/* Add label for electionName  */}
+
 
         <fieldset>
           <legend>Choose an election :</legend>
@@ -265,18 +400,18 @@ const CreateElection = ({ contract, account }) => {
         </fieldset>
 
 
-        {/* Add label for voterName */}
+
         <label htmlFor="voterName">Voter Metamask Address :</label>
         <input onFocus={() => setMsgVoter('')} type="text" id="voterName" placeholder="Voter Metamask Address" value={voterAddress} onChange={(e) => setVoterAddress(e.target.value)} />
 
-        {error && <div className="error">{error}</div>} {/* Display error message */}
+        {error && <div className="error">{error}</div>}
 
         {!voterLoading ?
           (<button onClick={addVoterr} disabled={isButtonDisabled}>Add Voter Now</button>)
           : (<button disabled>Adding...</button>)}
 
       </form>
-      {/* ///////////////////////////////////////////////////////////////////////////////// */}
+
 
       <div className="tit">Cancel Election</div>
       <div className="message">{msgCancel}</div>
@@ -302,6 +437,7 @@ const CreateElection = ({ contract, account }) => {
           <button onClick={cancel} disabled={isButtonDisabled}>Cancel </button>) :
           (<button disabled>Cancelling...</button>)}
       </form>
+      <ToastContainer />
     </Button>
   );
 };
@@ -381,7 +517,7 @@ button{
   border: none;
   border-radius: 10px;
   font-size: 25px;
-  padding: 11px;
+  padding: 7px;
   cursor: pointer;
   color: white;
 }

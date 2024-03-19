@@ -61,10 +61,10 @@ span{
 button{
   background-color: #25ce8f;
   border:none;
-  border-radius:15px;
-  padding: 20px;
-  padding-left: 50px;
-  padding-right: 50px;
+  border-radius:10px;
+  padding: 12px;
+  padding-left: 25px;
+  padding-right: 25px;
   font-size: 25px;
   color: white;
   cursor: pointer;

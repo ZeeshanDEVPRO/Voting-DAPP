@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import { ToastContainer, toast,Bounce} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Vote = ({ contract, account }) => {
   const [candidates, setCandidates] = useState([]);
@@ -80,6 +82,20 @@ const Vote = ({ contract, account }) => {
     setElectionName(val);
     event.preventDefault();
     try {
+      if (!val) {
+        toast.error('Please !', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        });
+        return;
+      }
       let getCandidatesRes = await contract.allCandidates(val);
       getCandidatesRes = await getCandidatesRes;
       if (!getCandidatesRes) {
@@ -92,6 +108,17 @@ const Vote = ({ contract, account }) => {
     }
     catch (e) {
       console.error(e);
+      toast.error('Please select an election!', {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     }
   }
 
@@ -105,7 +132,7 @@ const Vote = ({ contract, account }) => {
   return (
     <Button>
       <div className="display">Vote now for a change</div>
-      <div className="display" style={{fontSize:"30px",color:"white"}}>{msgVoter}</div>
+      <div className="display" style={{ fontSize: "30px", color: "white" }}>{msgVoter}</div>
       {!electionName ?
         (
           <form className="vote-form">
@@ -148,15 +175,15 @@ const Vote = ({ contract, account }) => {
               }
             </fieldset>
             {!loading ? (
-            <button type="submit" onClick={vote} disabled={noVoteDisabled}>Cast Vote</button>)
-            :
-            (<button disabled>Adding vote...</button>)}
+              <button type="submit" onClick={vote} disabled={noVoteDisabled}>Cast Vote</button>)
+              :
+              (<button disabled>Adding vote...</button>)}
             <button type="submit" onClick={anotherElection}>Select Another Election</button>
 
           </form>
         )
       }
-
+      <ToastContainer />
     </Button>
   )
 }

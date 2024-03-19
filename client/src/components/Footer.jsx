@@ -16,12 +16,7 @@ const Footer = () => {
                     <div className="sub">FAQ</div>
                     <div className="sub">Help Center</div>
                 </div>
-                {/* <div className="hungry">
-          <div className="tit">HUNGRYVERSE</div>
-          <div className="sub">Veg Basket</div>
-          <div className="sub">PizZa Gang</div>
-          <div className="sub">Cookie Story</div>
-        </div> */}
+              
                 <div className="partner">
                     <div className="tit">PARTNER</div>
                     <div className="sub">Become a Partner</div>
@@ -76,6 +71,8 @@ color: white;
 .btn{
   cursor: pointer;
   border-radius: 5px;
+  /* font-size: 40px; */
+  padding: 3px;
 }
 button{
   border: none;
