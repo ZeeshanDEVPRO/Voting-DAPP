@@ -329,9 +329,9 @@ const CreateElection = ({ contract, account }) => {
 
         {error && <div className="error">{error}</div>}
         {loading === false ? (
-          <button onClick={create}>Create Election</button>
+          <button  className='button' onClick={create}>Create Election</button>
         ) : (
-          <button disabled>Creating...</button>
+          <button className='button' disabled>Creating...</button>
         )}
 
       </form>
@@ -371,9 +371,9 @@ const CreateElection = ({ contract, account }) => {
         {error && <div className="error">{error}</div>}
         {candidateLoading === false ? (
 
-          <button onClick={add} disabled={isButtonDisabled}>Add Candidate Now</button>
+          <button  className='button' onClick={add} disabled={isButtonDisabled}>Add Candidate Now</button>
         ) : (
-          <button disabled>Adding...</button>
+          <button  className='button' disabled>Adding...</button>
         )}
 
       </form>
@@ -407,8 +407,8 @@ const CreateElection = ({ contract, account }) => {
         {error && <div className="error">{error}</div>}
 
         {!voterLoading ?
-          (<button onClick={addVoterr} disabled={isButtonDisabled}>Add Voter Now</button>)
-          : (<button disabled>Adding...</button>)}
+          (<button  className='button' onClick={addVoterr} disabled={isButtonDisabled}>Add Voter Now</button>)
+          : (<button  className='button' disabled>Adding...</button>)}
 
       </form>
 
@@ -434,8 +434,8 @@ const CreateElection = ({ contract, account }) => {
             </div>)}
         </fieldset>
         {!cancelLoading ? (
-          <button onClick={cancel} disabled={isButtonDisabled}>Cancel </button>) :
-          (<button disabled>Cancelling...</button>)}
+          <button  className='button' onClick={cancel} disabled={isButtonDisabled}>Cancel </button>) :
+          (<button className='button' disabled>Cancelling...</button>)}
       </form>
       <ToastContainer />
     </Button>
@@ -512,7 +512,7 @@ input[type=text],input[type=datetime-local]{
   font-size: 20px;
   padding: 11px;
 }
-button{
+.button{
   background-color: #25ce8f;
   border: none;
   border-radius: 10px;

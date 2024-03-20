@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { ToastContainer, toast,Bounce} from 'react-toastify';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Vote = ({ contract, account }) => {
@@ -37,30 +37,64 @@ const Vote = ({ contract, account }) => {
     event.preventDefault();
     try {
       setLoading(true);
+      if (!electionName || !candidateOption) {
+        toast.error('Please enter all fields!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        })
+        setLoading(false);
+        return;
+      }
       const voteRes = await contract.castVote(electionName, candidateOption, account[0]);
-      await voteRes;
       if (!voteRes) {
         console.error("vote error");
         console.warn("vote error chicken");
         setLoading(false);
-      }
-      else {
+      } else {
         console.log("voted");
         console.warn("candidate", candidateOption);
         setLoading(false);
         setCandidateoption('');
         setElectionName('');
-        setMsgVoter("Voting Successful");
-        setTimeout(() => {
-          setMsgVoter('');
-        }, 5000);
+        toast.success('Voted!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        })
       }
-    }
-    catch (e) {
-      console.error(e);
+    } catch (e) {
+      if (e.message.includes("Voting outside election period")) {
+        toast.error('Voting outside election period!', {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        })
+      } else {
+        console.error(e);
+      }
       setLoading(false);
     }
   }
+
 
   const getElections = async () => {
     try {
@@ -83,18 +117,7 @@ const Vote = ({ contract, account }) => {
     event.preventDefault();
     try {
       if (!val) {
-        toast.error('Please !', {
-          position: "bottom-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-        });
-        return;
+        throw new Error('Please select an election!');
       }
       let getCandidatesRes = await contract.allCandidates(val);
       getCandidatesRes = await getCandidatesRes;
@@ -105,20 +128,9 @@ const Vote = ({ contract, account }) => {
       console.log(getCandidatesRes);
       setSelectedElection(true);
       // setElectionName('');
-    }
-    catch (e) {
+    } catch (e) {
       console.error(e);
-      toast.error('Please select an election!', {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+
     }
   }
 
@@ -137,13 +149,13 @@ const Vote = ({ contract, account }) => {
         (
           <form className="vote-form">
 
-            <fieldset>
+            <fieldset className='fieldset'>
               <legend>Choose an election : </legend>
               {elections.length > 0 ? (
                 elections.map((ele, index) => (
-                  <label key={ele} htmlFor={ele}>
+                  <label className="label" key={ele} htmlFor={ele}>
                     <div className="dis">
-                      <input type="radio" id={ele} name="vote" value={ele} onClick={handleElectionChange} />
+                      <input className="input" type="radio" id={ele} name="vote" value={ele} onClick={handleElectionChange} />
                       <div className="ele">{ele}</div>
                     </div>
                   </label>
@@ -153,20 +165,20 @@ const Vote = ({ contract, account }) => {
                   There are no elections available for you yet. Try creating an election or asking someone to add you to the voter list. Remember only the account added in the voter list by the creator can vote!
                 </div>)}
             </fieldset>
-            <button type="submit" onClick={getCandidates} disabled={isButtonDisabled}>Show all Candidates</button>
+            <button className="button" type="submit" onClick={getCandidates} disabled={isButtonDisabled}>Show all Candidates</button>
           </form>
         )
         :
         (
           <form className="vote-form">
 
-            <fieldset>
+            <fieldset className='fieldset'>
               <legend>Choose a candidate : </legend>
               {candidates.length > 0 ? (
                 candidates.map((candidate, index) => (
-                  <label key={candidate} htmlFor={candidate}>
+                  <label className="label" key={candidate} htmlFor={candidate}>
                     <div className="in">
-                      <input type="radio" id={candidate} name="vote" value={index} onChange={handleCandidateChange} />
+                      <input className="input" type="radio" id={candidate} name="vote" value={index} onChange={handleCandidateChange} />
                       {candidate}
                     </div>
                   </label>
@@ -175,10 +187,10 @@ const Vote = ({ contract, account }) => {
               }
             </fieldset>
             {!loading ? (
-              <button type="submit" onClick={vote} disabled={noVoteDisabled}>Cast Vote</button>)
+              <button className="button" type="submit" onClick={vote} disabled={noVoteDisabled}>Cast Vote</button>)
               :
-              (<button disabled>Adding vote...</button>)}
-            <button type="submit" onClick={anotherElection}>Select Another Election</button>
+              (<button className="button" disabled>Adding vote...</button>)}
+            <button className="button" type="submit" onClick={anotherElection}>Select Another Election</button>
 
           </form>
         )
@@ -199,7 +211,7 @@ padding: 5vh;
 display: flex;
 flex-direction: column;
 align-items: center;
-fieldset{
+.fieldset{
   font-size: 25px;
 }
 .vote-form{
@@ -210,7 +222,7 @@ fieldset{
   flex-direction: row;
   gap: 15px;
 }
-input{
+.input{
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -236,10 +248,10 @@ input{
 #tit{
   font-size: 40px;
 }
-label{
+.label{
   color: #25ce8f;
 }
-button{
+.button{
   min-width:30vw;
   min-height:8vh;
   font-size: 20px;
