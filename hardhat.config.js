@@ -1,7 +1,8 @@
 require("@nomicfoundation/hardhat-toolbox");
+import dotenv from 'dotenv'
 
-const SEPOLIA_URL = "https://eth-sepolia.g.alchemy.com/v2/hP78WhFemrdoGUusrnLiqXe2nIkxjf4G";
-const PRIVATE_KEY = "b9954ffe38cff520a970632904805fb9b4d1a582db6f559680916e23727ebe52";
+const SEPOLIA_URL = process.env.SEPOLIA_URL;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 module.exports = {
   solidity: "0.8.19",
